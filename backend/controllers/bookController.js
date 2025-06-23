@@ -70,28 +70,41 @@ export const addBook = async (req, res) => {
 export const editBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, author, genre } = req.body;
+    const updateData = req.body;
     
-    const book = await Book.findById(id);
+    // Validate the ID format
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      console.log('Invalid ID format');
+      return res.status(400).json({ message: 'Invalid book ID format' });
+    }
     
-    if (!book || book.isDeleted) {
+    const book = await Book.findByIdAndUpdate(
+      id, 
+      updateData, 
+      { 
+        new: true, 
+        runValidators: true,
+        upsert: false
+      }
+    );
+    
+    if (!book) {
+      console.log('Book not found with ID:', id);
       return res.status(404).json({ message: 'Book not found' });
     }
     
-    book.title = title || book.title;
-    book.author = author || book.author;
-    book.genre = genre || book.genre;
-    book.updatedAt = new Date();
-    
-    await book.save();
-    
-    res.json({
-      success: true,
+    console.log('Book updated successfully:', book);
+    res.json({ 
       message: 'Book updated successfully',
-      book
+      book: book 
     });
+    
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error in editBook controller:', error);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
   }
 };
 

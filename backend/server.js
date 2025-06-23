@@ -8,15 +8,25 @@ import authRoutes from './routes/authRoutes.js';
 import bookRoutes from './routes/bookRoutes.js';
 import bookRequestRoutes from './routes/bookRequestRoutes.js';
 import bookIssueRoutes from './routes/bookIssueRoutes.js';
-
+import cors from "cors";
 
 
 
 
 const app = express();
+dotenv.config();
+
+app.use(cors({
+  origin: 'http://localhost:5173', // Your Vite dev server URL
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use(bodyParser.json());
-dotenv.config();
+
+
+
 
 const PORT = process.env.PORT || 5000;
 const MONGOURL = process.env.MONGOURL;

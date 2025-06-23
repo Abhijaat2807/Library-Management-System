@@ -62,9 +62,10 @@ export const createBookRequest = async (req, res) => {
 };
 
 // @desc Get all pending requests (Librarian/Admin only)
-export const getAllPendingRequests = async (req, res) => {
+export const getAllRequests = async (req, res) => {
   try {
-    const requests = await BookRequest.find({ status: 'pending' })
+    // Remove the status filter to get ALL requests, not just pending
+    const requests = await BookRequest.find({}) // Remove { status: 'pending' }
       .populate('user', 'email')
       .populate('book', 'title author genre totalCopies availableCopies')
       .sort({ createdAt: -1 });

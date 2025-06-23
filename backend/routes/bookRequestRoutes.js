@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   createBookRequest,
-  getAllPendingRequests,
+  getAllRequests,
   approveBookRequest,
   rejectBookRequest,
   getUserRequests,
@@ -17,7 +17,7 @@ router.get('/my-requests', authenticateToken, authorizeRoles('user'), getUserReq
 router.get('/my-rejected', authenticateToken, authorizeRoles('user'), getUserRejectedRequests);
 
 // Librarian/Admin routes
-router.get('/pending', authenticateToken, authorizeRoles('admin', 'librarian'), getAllPendingRequests);
+router.get('/pending', authenticateToken, authorizeRoles('admin', 'librarian'), getAllRequests);
 router.put('/:id/approve', authenticateToken, authorizeRoles('admin', 'librarian'), approveBookRequest);
 router.put('/:id/reject', authenticateToken, authorizeRoles('admin', 'librarian'), rejectBookRequest);
 
