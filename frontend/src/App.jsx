@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import AuthPage from './pages/AuthPage';
 import Layout from './components/layout/Layout';
 import BooksPage from './pages/BooksPage';
@@ -12,11 +13,6 @@ import MyIssuesPage from './pages/MyIssuesPage';
 import IssuesManagementPage from './pages/IssuesManagementPage';
 import UserDashboard from './components/UserDashboard';
 import LibrarianDashboard from './components/LibrarianDashboard';
-
-
-
-
-
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -123,11 +119,13 @@ const AppRoutes = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="min-h-screen bg-background">
-          <AppRoutes />
-        </div>
-      </Router>
+      <ThemeProvider>
+        <Router>
+          <div className="min-h-screen bg-background dark:bg-gray-900">
+            <AppRoutes />
+          </div>
+        </Router>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

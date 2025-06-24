@@ -208,3 +208,43 @@ export const getUserRejectedRequests = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+// @desc Delete a book request
+// @route DELETE /api/book-requests/:id
+// @access Private (Admin/Librarian)
+export const deleteRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    console.log('=== DELETE BOOK REQUEST ===');
+    console.log('Request ID to delete:', id);
+    
+    // Find the request first
+    const request = await BookRequest.findById(id);
+    if (!request) {
+      return res.status(404).json({
+        success: false,
+        message: 'Book request not found'
+      });
+    }
+    
+    console.log('Found request to delete:', request);
+    
+    // Delete the request
+    await BookRequest.findByIdAndDelete(id);
+    
+    console.log('Request deleted successfully');
+    
+    res.json({
+      success: true,
+      message: 'Book request deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting book request:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message
+    });
+  }
+};

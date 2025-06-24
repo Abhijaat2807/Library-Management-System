@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Clock, CheckCircle, XCircle, BookOpen, User, Calendar, Search } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, BookOpen, User, Calendar, Search, Trash2 } from 'lucide-react';
 
 const RequestsManagementPage = () => {
   const { isLibrarian } = useAuth();
@@ -27,6 +27,9 @@ const RequestsManagementPage = () => {
   const [showIssueDialog, setShowIssueDialog] = useState(false);
   const [selectedIssueRequestId, setSelectedIssueRequestId] = useState(null);
   const [processingIssue, setProcessingIssue] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [requestToDelete, setRequestToDelete] = useState(null);
+  const [processingDelete, setProcessingDelete] = useState(null);
 
   useEffect(() => {
     if (isLibrarian()) {
@@ -228,6 +231,33 @@ const RequestsManagementPage = () => {
     }
   };
 
+  const handleDeleteRequest = async (requestId) => {
+    try {
+      setProcessingDelete(requestId);
+      console.log('=== FRONTEND DELETE REQUEST ===');
+      console.log('Deleting request with ID:', requestId);
+      
+      const response = await requestsAPI.deleteRequest(requestId);
+      console.log('Delete response:', response);
+      
+      // Remove request from the list
+      setRequests(prev => prev.filter(req => req._id !== requestId));
+      
+      // Close dialog
+      setShowDeleteDialog(false);
+      setRequestToDelete(null);
+      
+      // Show success message
+      alert(response.message || 'Request deleted successfully!');
+      
+    } catch (error) {
+      console.error('Error deleting request:', error);
+      alert(`Failed to delete request: ${error.message}`);
+    } finally {
+      setProcessingDelete(null);
+    }
+  };
+
   const getStatusBadge = (status) => {
     switch (status) {
       case 'pending':
@@ -322,7 +352,7 @@ const RequestsManagementPage = () => {
               placeholder="Search by book title, author, or user email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white text-black border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              className="pl-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -332,7 +362,7 @@ const RequestsManagementPage = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="all">All Requests</option>
             <option value="pending">Pending</option>
@@ -347,7 +377,7 @@ const RequestsManagementPage = () => {
           <Button 
             variant="outline" 
             onClick={clearFilters}
-            className="bg-white text-black border-gray-300 hover:bg-gray-50"
+            className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Clear Filters
           </Button>
@@ -356,42 +386,46 @@ const RequestsManagementPage = () => {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold">{requests.length}</div>
-            <div className="text-sm text-gray-600">Total Requests</div>
+            <div className="text-2xl font-bold text-gray-800 dark:text-white">{requests.length}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Total Requests</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-600">
+            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
               {requests.filter(r => r.status === 'pending').length}
             </div>
-            <div className="text-sm text-gray-600">Pending</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Pending</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {requests.filter(r => r.status === 'approved').length}
             </div>
-            <div className="text-sm text-gray-600">Approved</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Approved</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {requests.filter(r => r.status === 'issued').length}
             </div>
-            <div className="text-sm text-gray-600">Issued</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Issued</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-red-600">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
               {requests.filter(r => r.status === 'rejected').length}
             </div>
-            <div className="text-sm text-gray-600">Rejected</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Rejected</div>
           </CardContent>
         </Card>
       </div>
@@ -443,159 +477,161 @@ const RequestsManagementPage = () => {
                       <div className="text-right">
                         {getStatusBadge(request.status)}
                         
-                        {request.status === 'pending' && (
-                          <div className="flex gap-2 mt-3">
-                            {/* Approve Button with Dialog */}
-                            <Dialog open={showApproveDialog && selectedRequestId === request._id} onOpenChange={(open) => {
-                              setShowApproveDialog(open);
-                              if (!open) {
-                                setSelectedRequestId(null);
-                                setFinePerDay(0);
-                              }
-                            }}>
-                              <DialogTrigger asChild>
-                                <Button
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedRequestId(request._id);
-                                    setShowApproveDialog(true);
-                                  }}
-                                  disabled={processingRequest === request._id}
-                                  className="bg-green-500 hover:bg-green-600 text-white"
-                                >
-                                  <CheckCircle className="w-4 h-4 mr-1" />
-                                  {processingRequest === request._id ? 'Processing...' : 'Approve'}
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="bg-white text-black">
-                                <DialogHeader>
-                                  <DialogTitle className="text-black">Approve Book Request</DialogTitle>
-                                </DialogHeader>
-                                <div className="space-y-4">
-                                  <div>
-                                    <h4 className="font-medium text-black">{request.book.title}</h4>
-                                    <p className="text-sm text-gray-600">Requested by: {request.user.email}</p>
-                                    <p className="text-sm text-gray-600">Duration: {request.requestedDuration} days</p>
+                        {/* Action Buttons Container */}
+                        <div className="mt-3 space-y-2">
+                          {/* Existing buttons for pending requests */}
+                          {request.status === 'pending' && (
+                            <div className="flex gap-2">
+                              {/* Approve Button with Dialog */}
+                              <Dialog open={showApproveDialog && selectedRequestId === request._id} onOpenChange={(open) => {
+                                setShowApproveDialog(open);
+                                if (!open) {
+                                  setSelectedRequestId(null);
+                                  setFinePerDay(0);
+                                }
+                              }}>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedRequestId(request._id);
+                                      setShowApproveDialog(true);
+                                    }}
+                                    disabled={processingRequest === request._id}
+                                    className="bg-green-500 hover:bg-green-600 text-white"
+                                  >
+                                    <CheckCircle className="w-4 h-4 mr-1" />
+                                    {processingRequest === request._id ? 'Processing...' : 'Approve'}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="bg-white text-black">
+                                  <DialogHeader>
+                                    <DialogTitle className="text-black">Approve Book Request</DialogTitle>
+                                  </DialogHeader>
+                                  <div className="space-y-4">
+                                    <div>
+                                      <h4 className="font-medium text-black">{request.book.title}</h4>
+                                      <p className="text-sm text-gray-600">Requested by: {request.user.email}</p>
+                                      <p className="text-sm text-gray-600">Duration: {request.requestedDuration} days</p>
+                                    </div>
+                                    
+                                    <div className="space-y-2">
+                                      <Label htmlFor="finePerDay" className="text-black">Fine per day (optional)</Label>
+                                      <Input
+                                        id="finePerDay"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={finePerDay}
+                                        onChange={(e) => setFinePerDay(parseFloat(e.target.value) || 0)}
+                                        placeholder="Enter fine amount per day (e.g., 0.50)"
+                                        className="bg-white text-black border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                      />
+                                      <p className="text-xs text-gray-500">
+                                        Fine will be charged per day after the due date (leave 0 for no fine)
+                                      </p>
+                                    </div>
+                                    
+                                    <div className="flex gap-2">
+                                      <Button
+                                        onClick={() => handleApproveRequest(request._id, finePerDay)}
+                                        className="flex-1 bg-green-500 text-white hover:bg-green-600"
+                                        disabled={processingRequest === request._id}
+                                      >
+                                        Approve Request
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                          setShowApproveDialog(false);
+                                          setSelectedRequestId(null);
+                                          setFinePerDay(0);
+                                        }}
+                                        className="bg-white text-black border-gray-300 hover:bg-gray-50"
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </div>
                                   </div>
-                                  
-                                  <div className="space-y-2">
-                                    <Label htmlFor="finePerDay" className="text-black">Fine per day (optional)</Label>
-                                    <Input
-                                      id="finePerDay"
-                                      type="number"
-                                      min="0"
-                                      step="0.01"
-                                      value={finePerDay}
-                                      onChange={(e) => setFinePerDay(parseFloat(e.target.value) || 0)}
-                                      placeholder="Enter fine amount per day (e.g., 0.50)"
-                                      className="bg-white text-black border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                    />
-                                    <p className="text-xs text-gray-500">
-                                      Fine will be charged per day after the due date (leave 0 for no fine)
-                                    </p>
-                                  </div>
-                                  
-                                  <div className="flex gap-2">
-                                    <Button
-                                      onClick={() => handleApproveRequest(request._id, finePerDay)}
-                                      className="flex-1 bg-green-500 text-white hover:bg-green-600"
-                                      disabled={processingRequest === request._id}
-                                    >
-                                      Approve Request
-                                    </Button>
-                                    <Button
-                                      variant="outline"
-                                      onClick={() => {
-                                        setShowApproveDialog(false);
-                                        setSelectedRequestId(null);
-                                        setFinePerDay(0);
-                                      }}
-                                      className="bg-white text-black border-gray-300 hover:bg-gray-50"
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </div>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
+                                </DialogContent>
+                              </Dialog>
 
-                            {/* Reject Button with Dialog */}
-                            <Dialog open={showRejectDialog && selectedRejectRequestId === request._id} onOpenChange={(open) => {
-                              setShowRejectDialog(open);
-                              if (!open) {
-                                setSelectedRejectRequestId(null);
-                                setRejectionReason('');
-                              }
-                            }}>
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant="destructive"
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedRejectRequestId(request._id);
-                                    setShowRejectDialog(true);
-                                  }}
-                                  disabled={processingRequest === request._id}
-                                >
-                                  <XCircle className="w-4 h-4 mr-1" />
-                                  {processingRequest === request._id ? 'Processing...' : 'Reject'}
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="bg-white text-black">
-                                <DialogHeader>
-                                  <DialogTitle className="text-black">Reject Book Request</DialogTitle>
-                                </DialogHeader>
-                                <div className="space-y-4">
-                                  <div>
-                                    <h4 className="font-medium text-black">{request.book.title}</h4>
-                                    <p className="text-sm text-gray-600">Requested by: {request.user.email}</p>
-                                    <p className="text-sm text-gray-600">Duration: {request.requestedDuration} days</p>
+                              {/* Reject Button with Dialog */}
+                              <Dialog open={showRejectDialog && selectedRejectRequestId === request._id} onOpenChange={(open) => {
+                                setShowRejectDialog(open);
+                                if (!open) {
+                                  setSelectedRejectRequestId(null);
+                                  setRejectionReason('');
+                                }
+                              }}>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedRejectRequestId(request._id);
+                                      setShowRejectDialog(true);
+                                    }}
+                                    disabled={processingRequest === request._id}
+                                  >
+                                    <XCircle className="w-4 h-4 mr-1" />
+                                    {processingRequest === request._id ? 'Processing...' : 'Reject'}
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="bg-white text-black">
+                                  <DialogHeader>
+                                    <DialogTitle className="text-black">Reject Book Request</DialogTitle>
+                                  </DialogHeader>
+                                  <div className="space-y-4">
+                                    <div>
+                                      <h4 className="font-medium text-black">{request.book.title}</h4>
+                                      <p className="text-sm text-gray-600">Requested by: {request.user.email}</p>
+                                      <p className="text-sm text-gray-600">Duration: {request.requestedDuration} days</p>
+                                    </div>
+                                    
+                                    <div className="space-y-2">
+                                      <Label htmlFor="rejectionReason" className="text-black">Rejection Reason *</Label>
+                                      <Textarea
+                                        id="rejectionReason"
+                                        value={rejectionReason}
+                                        onChange={(e) => setRejectionReason(e.target.value)}
+                                        placeholder="Please provide a reason for rejecting this request..."
+                                        className="bg-white text-black border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                        rows={3}
+                                      />
+                                      <p className="text-xs text-gray-500">
+                                        This reason will be shown to the user
+                                      </p>
+                                    </div>
+                                    
+                                    <div className="flex gap-2">
+                                      <Button
+                                        onClick={() => handleRejectRequest(request._id, rejectionReason)}
+                                        className="flex-1 bg-red-500 text-white hover:bg-red-600"
+                                        disabled={processingRequest === request._id || !rejectionReason.trim()}
+                                      >
+                                        Reject Request
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                          setShowRejectDialog(false);
+                                          setSelectedRejectRequestId(null);
+                                          setRejectionReason('');
+                                        }}
+                                        className="bg-white text-black border-gray-300 hover:bg-gray-50"
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </div>
                                   </div>
-                                  
-                                  <div className="space-y-2">
-                                    <Label htmlFor="rejectionReason" className="text-black">Rejection Reason *</Label>
-                                    <Textarea
-                                      id="rejectionReason"
-                                      value={rejectionReason}
-                                      onChange={(e) => setRejectionReason(e.target.value)}
-                                      placeholder="Please provide a reason for rejecting this request..."
-                                      className="bg-white text-black border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                      rows={3}
-                                    />
-                                    <p className="text-xs text-gray-500">
-                                      This reason will be shown to the user
-                                    </p>
-                                  </div>
-                                  
-                                  <div className="flex gap-2">
-                                    <Button
-                                      onClick={() => handleRejectRequest(request._id, rejectionReason)}
-                                      className="flex-1 bg-red-500 text-white hover:bg-red-600"
-                                      disabled={processingRequest === request._id || !rejectionReason.trim()}
-                                    >
-                                      Reject Request
-                                    </Button>
-                                    <Button
-                                      variant="outline"
-                                      onClick={() => {
-                                        setShowRejectDialog(false);
-                                        setSelectedRejectRequestId(null);
-                                        setRejectionReason('');
-                                      }}
-                                      className="bg-white text-black border-gray-300 hover:bg-gray-50"
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </div>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                          </div>
-                        )}
-                        
-                        {/* NEW: Issue Book Button for Approved Requests */}
-                        {request.status === 'approved' && (
-                          <div className="mt-3">
+                                </DialogContent>
+                              </Dialog>
+                            </div>
+                          )}
+                          
+                          {/* Issue Book Button for Approved Requests */}
+                          {request.status === 'approved' && (
                             <Dialog open={showIssueDialog && selectedIssueRequestId === request._id} onOpenChange={(open) => {
                               setShowIssueDialog(open);
                               if (!open) {
@@ -610,7 +646,7 @@ const RequestsManagementPage = () => {
                                     setShowIssueDialog(true);
                                   }}
                                   disabled={processingIssue === request._id}
-                                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                                  className="w-full bg-blue-500 hover:bg-blue-600 text-white"
                                 >
                                   <BookOpen className="w-4 h-4 mr-1" />
                                   {processingIssue === request._id ? 'Processing...' : 'Issue Book'}
@@ -659,23 +695,88 @@ const RequestsManagementPage = () => {
                                 </div>
                               </DialogContent>
                             </Dialog>
-                          </div>
-                        )}
+                          )}
 
-                        {/* Status Information */}
-                        {request.status === 'issued' && (
-                          <div className="bg-blue-50 p-2 rounded-lg mt-3">
-                            <p className="text-xs text-blue-800">
-                              ✅ Book issued - Available in Issues Management
-                            </p>
-                          </div>
-                        )}
-
-                        {request.status === 'rejected' && request.rejectionReason && (
-                          <p className="text-sm text-red-600 mt-2">
-                            Reason: {request.rejectionReason}
-                          </p>
-                        )}
+                          {/* DELETE BUTTON - Available for ALL request statuses */}
+                          <Dialog open={showDeleteDialog && requestToDelete?._id === request._id} onOpenChange={(open) => {
+                            setShowDeleteDialog(open);
+                            if (!open) {
+                              setRequestToDelete(null);
+                            }
+                          }}>
+                            <DialogTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  setRequestToDelete(request);
+                                  setShowDeleteDialog(true);
+                                }}
+                                disabled={processingDelete === request._id}
+                                className="w-full bg-red-500 dark:bg-red-600 text-white border-red-500 dark:border-red-600 hover:bg-red-600 dark:hover:bg-red-700"
+                              >
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                {processingDelete === request._id ? 'Deleting...' : 'Delete Request'}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="bg-white text-black">
+                              <DialogHeader>
+                                <DialogTitle className="text-black">Delete Request</DialogTitle>
+                              </DialogHeader>
+                              <div className="space-y-4">
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <Trash2 className="w-5 h-5 text-red-600" />
+                                    <h4 className="font-medium text-red-800">Warning: Permanent Deletion</h4>
+                                  </div>
+                                  <p className="text-sm text-red-700">
+                                    This action will permanently delete the request for:
+                                  </p>
+                                  <div className="mt-2 p-2 bg-white rounded border">
+                                    <div className="font-medium">{request.book?.title}</div>
+                                    <div className="text-sm text-gray-600">
+                                      Requested by: {request.user?.email}
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                      Status: {request.status}
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                      Requested on: {formatDate(request.createdAt)}
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                  <p className="text-sm text-yellow-700">
+                                    <strong>Note:</strong> This will permanently remove the request from the system. 
+                                    The user will not be notified of this deletion.
+                                  </p>
+                                </div>
+                                
+                                <div className="flex gap-2">
+                                  <Button
+                                    onClick={() => handleDeleteRequest(request._id)}
+                                    disabled={processingDelete === request._id}
+                                    className="flex-1 bg-red-500 text-white hover:bg-red-600"
+                                  >
+                                    <Trash2 className="w-4 h-4 mr-1" />
+                                    {processingDelete === request._id ? 'Deleting...' : 'Confirm Delete'}
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                      setShowDeleteDialog(false);
+                                      setRequestToDelete(null);
+                                    }}
+                                    className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                  >
+                                    Cancel
+                                  </Button>
+                                </div>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
                       </div>
                     </div>
                   </div>

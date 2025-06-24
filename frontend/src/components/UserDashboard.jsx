@@ -123,12 +123,12 @@ const UserDashboard = ({ user }) => {
 
   const getStatusBadge = (status) => {
     const badges = {
-      pending: <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>,
-      approved: <Badge className="bg-green-100 text-green-800">Approved</Badge>,
-      rejected: <Badge className="bg-red-100 text-red-800">Rejected</Badge>,
-      issued: <Badge className="bg-blue-100 text-blue-800">Issued</Badge>
+      pending: <Badge className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">Pending</Badge>,
+      approved: <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">Approved</Badge>,
+      rejected: <Badge className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">Rejected</Badge>,
+      issued: <Badge className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">Issued</Badge>
     };
-    return badges[status] || <Badge variant="outline">{status}</Badge>;
+    return badges[status] || <Badge variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">{status}</Badge>;
   };
 
   const getDueDateBadge = (dueDate) => {
@@ -137,11 +137,11 @@ const UserDashboard = ({ user }) => {
     const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return <Badge className="bg-red-100 text-red-800">Overdue</Badge>;
+      return <Badge className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">Overdue</Badge>;
     } else if (diffDays <= 3) {
-      return <Badge className="bg-yellow-100 text-yellow-800">Due Soon</Badge>;
+      return <Badge className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">Due Soon</Badge>;
     }
-    return <Badge className="bg-green-100 text-green-800">On Time</Badge>;
+    return <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">On Time</Badge>;
   };
 
   const testFineAPIWithToken = async () => {
@@ -201,10 +201,10 @@ const UserDashboard = ({ user }) => {
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded"></div>
+              <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
             ))}
           </div>
         </div>
@@ -217,63 +217,54 @@ const UserDashboard = ({ user }) => {
       
 
       {/* Welcome Header */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-2xl font-bold">Welcome back, {user?.email?.split('@')[0]}!</h1>
-          <p className="text-gray-600">Here's your library overview</p>
-        </div>
-        <Button 
-          onClick={() => navigate('/books')} 
-          className="bg-blue-500 hover:bg-blue-600 text-white"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Browse Books
-        </Button>
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome back, {user?.email?.split('@')[0]}!</h1>
+        <p className="text-gray-600 dark:text-gray-300">Here's your library overview</p>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">{dashboardData.stats.currentlyIssued}</div>
-            <div className="text-sm text-gray-600">Currently Reading</div>
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{dashboardData.stats.currentlyIssued}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Currently Reading</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-600">{dashboardData.stats.pendingRequests}</div>
-            <div className="text-sm text-gray-600">Pending Requests</div>
+            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{dashboardData.stats.pendingRequests}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Pending Requests</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">{dashboardData.stats.totalBooksRead}</div>
-            <div className="text-sm text-gray-600">Books Read</div>
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{dashboardData.stats.totalBooksRead}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Books Read</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-red-600">{dashboardData.stats.overdueBooks}</div>
-            <div className="text-sm text-gray-600">Overdue Books</div>
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{dashboardData.stats.overdueBooks}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Overdue Books</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-purple-600">${dashboardData.stats.totalFines.toFixed(2)}</div>
-            <div className="text-sm text-gray-600">Pending Fines</div>
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">${dashboardData.stats.totalFines.toFixed(2)}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Pending Fines</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Alerts */}
       {(dashboardData.stats.overdueBooks > 0 || dashboardData.stats.totalFines > 0) && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900/20">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
-              <h3 className="font-semibold text-red-800">Attention Required</h3>
+              <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
+              <h3 className="font-semibold text-red-800 dark:text-red-200">Attention Required</h3>
             </div>
-            <div className="text-sm text-red-700">
+            <div className="text-sm text-red-700 dark:text-red-300">
               {dashboardData.stats.overdueBooks > 0 && (
                 <p>• You have {dashboardData.stats.overdueBooks} overdue book(s)</p>
               )}
@@ -281,13 +272,6 @@ const UserDashboard = ({ user }) => {
                 <p>• You have ${dashboardData.stats.totalFines.toFixed(2)} in pending fines</p>
               )}
             </div>
-            <Button 
-              size="sm" 
-              className="mt-2 bg-red-600 hover:bg-red-700 text-white"
-              onClick={() => navigate('/my-issues')}
-            >
-              View My Issues
-            </Button>
           </CardContent>
         </Card>
       )}
@@ -295,9 +279,9 @@ const UserDashboard = ({ user }) => {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Currently Reading */}
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
               <BookOpen className="w-5 h-5" />
               Currently Reading
             </CardTitle>
@@ -305,12 +289,12 @@ const UserDashboard = ({ user }) => {
           <CardContent>
             {dashboardData.currentIssues.length === 0 ? (
               <div className="text-center py-8">
-                <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">No books currently issued</p>
+                <BookOpen className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                <p className="text-gray-600 dark:text-gray-300 mb-4">No books currently issued</p>
                 <Button 
                   variant="outline" 
                   onClick={() => navigate('/books')}
-                  className="bg-white text-black border-gray-300"
+                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   Browse Books
                 </Button>
@@ -318,11 +302,11 @@ const UserDashboard = ({ user }) => {
             ) : (
               <div className="space-y-4">
                 {dashboardData.currentIssues.map((issue) => (
-                  <div key={issue._id} className="flex items-start justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={issue._id} className="flex items-start justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div className="flex-1">
-                      <h4 className="font-medium">{issue.book?.title}</h4>
-                      <p className="text-sm text-gray-600">by {issue.book?.author}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <h4 className="font-medium text-gray-900 dark:text-white">{issue.book?.title}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">by {issue.book?.author}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Due: {formatDate(issue.dueDate)}
                       </p>
                     </div>
@@ -333,7 +317,7 @@ const UserDashboard = ({ user }) => {
                 ))}
                 <Button 
                   variant="outline" 
-                  className="w-full bg-white text-black border-gray-300"
+                  className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
                   onClick={() => navigate('/my-issues')}
                 >
                   View All Issues
@@ -344,9 +328,9 @@ const UserDashboard = ({ user }) => {
         </Card>
 
         {/* Recent Requests */}
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
               <Clock className="w-5 h-5" />
               Recent Requests
             </CardTitle>
@@ -354,12 +338,12 @@ const UserDashboard = ({ user }) => {
           <CardContent>
             {dashboardData.recentRequests.length === 0 ? (
               <div className="text-center py-8">
-                <Clock className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">No recent requests</p>
+                <Clock className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                <p className="text-gray-600 dark:text-gray-300 mb-4">No recent requests</p>
                 <Button 
                   variant="outline" 
                   onClick={() => navigate('/books')}
-                  className="bg-white text-black border-gray-300"
+                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   Request a Book
                 </Button>
@@ -367,11 +351,11 @@ const UserDashboard = ({ user }) => {
             ) : (
               <div className="space-y-4">
                 {dashboardData.recentRequests.map((request) => (
-                  <div key={request._id} className="flex items-start justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={request._id} className="flex items-start justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div className="flex-1">
-                      <h4 className="font-medium">{request.book?.title}</h4>
-                      <p className="text-sm text-gray-600">by {request.book?.author}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <h4 className="font-medium text-gray-900 dark:text-white">{request.book?.title}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">by {request.book?.author}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Requested: {formatDate(request.createdAt)}
                       </p>
                     </div>
@@ -382,7 +366,7 @@ const UserDashboard = ({ user }) => {
                 ))}
                 <Button 
                   variant="outline" 
-                  className="w-full bg-white text-black border-gray-300"
+                  className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
                   onClick={() => navigate('/my-requests')}
                 >
                   View All Requests
@@ -394,15 +378,15 @@ const UserDashboard = ({ user }) => {
       </div>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle className="text-gray-900 dark:text-white">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button 
               variant="outline" 
-              className="flex items-center gap-2 bg-white text-black border-gray-300"
+              className="flex items-center gap-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
               onClick={() => navigate('/books')}
             >
               <BookOpen className="w-4 h-4" />
@@ -410,7 +394,7 @@ const UserDashboard = ({ user }) => {
             </Button>
             <Button 
               variant="outline" 
-              className="flex items-center gap-2 bg-white text-black border-gray-300"
+              className="flex items-center gap-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
               onClick={() => navigate('/my-requests')}
             >
               <Clock className="w-4 h-4" />
@@ -418,7 +402,7 @@ const UserDashboard = ({ user }) => {
             </Button>
             <Button 
               variant="outline" 
-              className="flex items-center gap-2 bg-white text-black border-gray-300"
+              className="flex items-center gap-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
               onClick={() => navigate('/my-issues')}
             >
               <Calendar className="w-4 h-4" />

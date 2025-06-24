@@ -378,15 +378,15 @@ const IssuesManagementPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
           <BookOpen className="w-6 h-6" />
           Book Issues Management
         </h1>
-        <p className="text-gray-600">Manage issued books and handle returns</p>
+        <p className="text-gray-600 dark:text-gray-300">Manage issued books and handle returns</p>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
           {error}
         </div>
       )}
@@ -401,7 +401,7 @@ const IssuesManagementPage = () => {
               placeholder="Search by book title, author, or user email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white text-black border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              className="pl-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -411,7 +411,7 @@ const IssuesManagementPage = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="all">All Issues</option>
             <option value="active">Active</option>
@@ -425,7 +425,7 @@ const IssuesManagementPage = () => {
           <Button 
             variant="outline" 
             onClick={clearFilters}
-            className="bg-white text-black border-gray-300 hover:bg-gray-50"
+            className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Clear Filters
           </Button>
@@ -434,37 +434,31 @@ const IssuesManagementPage = () => {
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">{stats.totalIssued}</div>
-            <div className="text-sm text-gray-600">Currently Issued</div>
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.totalIssued}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Currently Issued</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-red-600">{stats.overdue}</div>
-            <div className="text-sm text-gray-600">Overdue</div>
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.overdue}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Overdue</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">{stats.returnedToday}</div>
-            <div className="text-sm text-gray-600">Returned Today</div>
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.returnedToday}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Returned Today</div>
           </CardContent>
         </Card>
-        <Card>
+        
+        <Card className="bg-white dark:bg-gray-800">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-600">${stats.totalFines.toFixed(2)}</div>
-            <div className="text-sm text-gray-600">Pending Fines</div>
-            {/* Add a button to view all fines */}
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-2 text-xs"
-              onClick={() => handleViewAllFines()}
-            >
-              View Details
-            </Button>
+            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">${stats.totalFines.toFixed(2)}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Pending Fines</div>
           </CardContent>
         </Card>
       </div>

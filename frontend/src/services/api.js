@@ -58,6 +58,22 @@ export const requestsAPI = {
       rejectionReason: reason // Include both just in case
     });
   },
+  deleteRequest: async (requestId) => {
+    const response = await fetch(`${API_BASE_URL}/book-requests/${requestId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to delete request');
+    }
+    
+    return response.json();
+  }
 };
 
 export const issuesAPI = {

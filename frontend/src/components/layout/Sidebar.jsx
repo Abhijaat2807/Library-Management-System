@@ -33,8 +33,13 @@ const Sidebar = () => {
   const navItems = isLibrarian() ? librarianNavItems : userNavItems;
 
   return (
-    <aside className="bg-gray-50 w-64 min-h-screen border-r border-gray-200">
-      <nav className="p-4 space-y-2">
+    <aside className="w-64 bg-white dark:bg-gray-800 shadow-md min-h-screen">
+      <div className="p-4">
+        <h1 className="text-xl font-bold text-gray-800 dark:text-white">
+          Library MS
+        </h1>
+      </div>
+      <nav className="mt-4">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
@@ -44,7 +49,7 @@ const Sidebar = () => {
                 "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground"
-                  : "text-gray-700 hover:bg-gray-100"
+                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               )
             }
           >

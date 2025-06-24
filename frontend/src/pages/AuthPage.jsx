@@ -78,163 +78,219 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
+        {/* Header */}
         <div className="text-center">
-          <Book className="mx-auto h-12 w-12 text-primary" />
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
             Library Management System
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Sign in to your account or create a new one
           </p>
         </div>
 
-        <Card>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
+        {/* Tab Navigation */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+          <div className="flex border-b border-gray-200 dark:border-gray-700">
+            <button
+              type="button"
+              onClick={() => setActiveTab('login')}
+              className={`flex-1 py-3 px-4 text-center font-medium rounded-tl-lg transition-colors ${
+                activeTab === 'login'
+                  ? 'bg-blue-500 text-white border-b-2 border-blue-500'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 bg-gray-50 dark:bg-gray-700'
+              }`}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('signup')}
+              className={`flex-1 py-3 px-4 text-center font-medium rounded-tr-lg transition-colors ${
+                activeTab === 'signup'
+                  ? 'bg-blue-500 text-white border-b-2 border-blue-500'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 bg-gray-50 dark:bg-gray-700'
+              }`}
+            >
+              Sign Up
+            </button>
+          </div>
 
-            <TabsContent value="login">
-              <CardHeader>
-                <CardTitle>Welcome back</CardTitle>
-                <CardDescription>
+          {/* Form Content */}
+          <div className="p-8 bg-white dark:bg-gray-800 rounded-b-lg">
+            {activeTab === 'login' ? (
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  Welcome back
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
                   Enter your credentials to access your account
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {error && (
-                  <Alert className="mb-4" variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
+                </p>
 
-                {/* User Type Selection */}
-                <div className="mb-4">
-                  <Label className="text-sm font-medium">Login as:</Label>
-                  <div className="flex space-x-4 mt-2">
-                    <Button
+                {/* Role Selection */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Login as:
+                  </label>
+                  <div className="flex space-x-4">
+                    <button
                       type="button"
-                      variant={userType === 'user' ? 'default' : 'outline'}
-                      size="sm"
                       onClick={() => setUserType('user')}
-                      className="flex items-center space-x-2"
+                      className={`flex items-center px-4 py-2 rounded-md border transition-colors ${
+                        userType === 'user'
+                          ? 'bg-blue-500 text-white border-blue-500'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+                      }`}
                     >
-                      <User className="w-4 h-4" />
-                      <span>User</span>
-                    </Button>
-                    <Button
+                      <User className="w-4 h-4 mr-2" />
+                      User
+                    </button>
+                    <button
                       type="button"
-                      variant={userType === 'librarian' ? 'default' : 'outline'}
-                      size="sm"
                       onClick={() => setUserType('librarian')}
-                      className="flex items-center space-x-2"
+                      className={`flex items-center px-4 py-2 rounded-md border transition-colors ${
+                        userType === 'librarian'
+                          ? 'bg-blue-500 text-white border-blue-500'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+                      }`}
                     >
-                      <Users className="w-4 h-4" />
-                      <span>Librarian</span>
-                    </Button>
+                      <Users className="w-4 h-4 mr-2" />
+                      Librarian
+                    </button>
                   </div>
                 </div>
 
+                {/* Error Message */}
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-md">
+                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                  </div>
+                )}
+
+                {/* Login Form */}
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Email
+                    </label>
+                    <input
                       id="email"
                       type="email"
                       value={loginForm.email}
                       onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
-                      required
                       placeholder="Enter your email"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
                     />
                   </div>
+
                   <div>
-                    <Label htmlFor="password">Password</Label>
-                    <Input
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Password
+                    </label>
+                    <input
                       id="password"
                       type="password"
                       value={loginForm.password}
                       onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                      required
                       placeholder="Enter your password"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
                     />
                   </div>
+
                   <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? 'Signing in...' : 'Sign In'}
                   </Button>
                 </form>
-              </CardContent>
-            </TabsContent>
+              </div>
+            ) : (
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  Create Account
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Join our library management system
+                </p>
 
-            <TabsContent value="signup">
-              <CardHeader>
-                <CardTitle>Create an account</CardTitle>
-                <CardDescription>
-                  Join our library community today
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                {/* Error Message */}
                 {error && (
-                  <Alert className="mb-4" variant="destructive">
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
+                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-md">
+                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                  </div>
                 )}
 
+                {/* Signup Form */}
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div>
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Full Name
+                    </label>
+                    <input
                       id="name"
                       type="text"
                       value={signupForm.name}
                       onChange={(e) => setSignupForm({ ...signupForm, name: e.target.value })}
-                      required
                       placeholder="Enter your full name"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
                     />
                   </div>
+
                   <div>
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input
+                    <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Email
+                    </label>
+                    <input
                       id="signup-email"
                       type="email"
                       value={signupForm.email}
                       onChange={(e) => setSignupForm({ ...signupForm, email: e.target.value })}
-                      required
                       placeholder="Enter your email"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
                     />
                   </div>
+
                   <div>
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input
+                    <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Password
+                    </label>
+                    <input
                       id="signup-password"
                       type="password"
                       value={signupForm.password}
                       onChange={(e) => setSignupForm({ ...signupForm, password: e.target.value })}
-                      required
                       placeholder="Create a password"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
                     />
                   </div>
+
                   <div>
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input
+                    <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Confirm Password
+                    </label>
+                    <input
                       id="confirm-password"
                       type="password"
                       value={signupForm.confirmPassword}
                       onChange={(e) => setSignupForm({ ...signupForm, confirmPassword: e.target.value })}
-                      required
                       placeholder="Confirm your password"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
                     />
                   </div>
+
                   <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? 'Creating account...' : 'Create Account'}
                   </Button>
                 </form>
-              </CardContent>
-            </TabsContent>
-          </Tabs>
-        </Card>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

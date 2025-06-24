@@ -5,7 +5,8 @@ import {
   approveBookRequest,
   rejectBookRequest,
   getUserRequests,
-  getUserRejectedRequests
+  getUserRejectedRequests,
+  deleteRequest
 } from '../controllers/bookRequestController.js';
 import { authenticateToken, authorizeRoles } from '../middleware/auth.js';
 
@@ -20,5 +21,6 @@ router.get('/my-rejected', authenticateToken, authorizeRoles('user'), getUserRej
 router.get('/pending', authenticateToken, authorizeRoles('admin', 'librarian'), getAllRequests);
 router.put('/:id/approve', authenticateToken, authorizeRoles('admin', 'librarian'), approveBookRequest);
 router.put('/:id/reject', authenticateToken, authorizeRoles('admin', 'librarian'), rejectBookRequest);
+router.delete('/:id', authenticateToken, authorizeRoles('admin', 'librarian'), deleteRequest);
 
 export default router;

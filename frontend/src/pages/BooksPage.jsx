@@ -203,11 +203,12 @@ const BooksPage = () => {
         <div className="flex-1">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            {/* Update search input */}
             <Input
               placeholder="Search by book name or author..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -217,7 +218,7 @@ const BooksPage = () => {
           <select
             value={availabilityFilter}
             onChange={(e) => setAvailabilityFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">All Books</option>
             <option value="available">Available Only</option>
@@ -231,7 +232,7 @@ const BooksPage = () => {
             <select
               value={authorFilter}
               onChange={(e) => setAuthorFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">All Authors</option>
               {authors.map(author => (
@@ -247,7 +248,7 @@ const BooksPage = () => {
             <select
               value={genreFilter}
               onChange={(e) => setGenreFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">All Genres</option>
               {genres.map(genre => (
@@ -259,7 +260,11 @@ const BooksPage = () => {
 
         {/* Clear Filters Button */}
         {(searchTerm || authorFilter || genreFilter || availabilityFilter) && (
-          <Button variant="outline" onClick={clearFilters}>
+          <Button 
+            variant="outline" 
+            onClick={clearFilters}
+            className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
             Clear Filters
           </Button>
         )}
@@ -312,7 +317,7 @@ const BooksPage = () => {
             const issuedCopies = totalCopies - availableCopies;
             
             return (
-              <Card key={book._id} className="hover:shadow-lg transition-shadow">
+              <Card key={book._id} className="bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start">
                     <Badge variant={availableCopies > 0 ? "default" : "secondary"}>
@@ -349,69 +354,60 @@ const BooksPage = () => {
                       </div>
                     )}
                   </div>
-                  <CardTitle className="text-lg">{book.title || 'Untitled'}</CardTitle>
-                  <p className="text-sm text-gray-600">by {book.author || 'Unknown Author'}</p>
+                  {/* Update text colors in book cards */}
+                  <CardTitle className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">{book.title || 'Untitled'}</CardTitle>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">by {book.author || 'Unknown Author'}</p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     {/* For Librarians - Show detailed statistics */}
                     {isLibrarian() && (
-                      <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-4">
                         <div className="grid grid-cols-2 gap-2 text-sm">
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-600">Available:</span>
-                            <span className="font-semibold text-green-600">{availableCopies}</span>
+                            <span className="text-gray-600 dark:text-gray-300">Available:</span>
+                            <span className="font-semibold text-green-600 dark:text-green-400">{availableCopies}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-600">Total:</span>
-                            <span className="font-semibold text-blue-600">{totalCopies}</span>
+                            <span className="text-gray-600 dark:text-gray-300">Total:</span>
+                            <span className="font-semibold text-blue-600 dark:text-blue-400">{totalCopies}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-600">Issued:</span>
-                            <span className="font-semibold text-orange-600">{issuedCopies}</span>
+                            <span className="text-gray-600 dark:text-gray-300">Issued:</span>
+                            <span className="font-semibold text-orange-600 dark:text-orange-400">{issuedCopies}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-600">Rate:</span>
-                            <span className="font-semibold text-gray-700">
+                            <span className="text-gray-600 dark:text-gray-300">Rate:</span>
+                            <span className="font-semibold text-gray-800 dark:text-gray-200">
                               {totalCopies > 0 ? Math.round((availableCopies / totalCopies) * 100) : 0}%
                             </span>
                           </div>
                         </div>
                         
-                        {/* Progress Bar */}
-                        {totalCopies > 0 && (
-                          <div className="mt-2">
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-green-500 h-2 rounded-full transition-all duration-300" 
-                                style={{ width: `${(availableCopies / totalCopies) * 100}%` }}
-                              ></div>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {availableCopies} of {totalCopies} copies available
-                            </p>
-                          </div>
-                        )}
+                        {/* Progress bar text */}
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {availableCopies} of {totalCopies} copies available
+                        </p>
                       </div>
                     )}
 
                     {/* For Users - Show simple availability */}
                     {!isLibrarian() && (
-                      <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                      <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-blue-900">
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                             Copies Available:
                           </span>
-                          <span className="text-lg font-bold text-blue-600">
+                          <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
                             {availableCopies}
                           </span>
                         </div>
                         {availableCopies > 0 ? (
-                          <p className="text-xs text-blue-700 mt-1">
+                          <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                             Ready to be borrowed
                           </p>
                         ) : (
-                          <p className="text-xs text-red-600 mt-1">
+                          <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                             All copies are currently issued
                           </p>
                         )}
@@ -425,10 +421,10 @@ const BooksPage = () => {
                           {book.genre}
                         </Badge>
                       )}
-                      {book.isbn && <p className="text-sm"><strong>ISBN:</strong> {book.isbn}</p>}
-                      {book.publishedYear && <p className="text-sm"><strong>Published:</strong> {book.publishedYear}</p>}
+                      {book.isbn && <p className="text-sm text-gray-600 dark:text-gray-300"><strong className="text-gray-900 dark:text-white">ISBN:</strong> {book.isbn}</p>}
+                      {book.publishedYear && <p className="text-sm text-gray-600 dark:text-gray-300"><strong className="text-gray-900 dark:text-white">Published:</strong> {book.publishedYear}</p>}
                       {book.description && (
-                        <p className="text-sm text-gray-600 line-clamp-2">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
                           {book.description}
                         </p>
                       )}
@@ -451,26 +447,26 @@ const BooksPage = () => {
                               setSelectedBookId(book._id);
                               setShowRequestDialog(true);
                             }}
-                            className="text-black border-black hover:bg-black hover:text-white"
+                            className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
                           >
                             <BookOpen className="w-4 h-4 mr-1" />
                             Request Issue
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="bg-white text-black">
+                        <DialogContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                           <DialogHeader>
-                            <DialogTitle className="text-black">Request Book Issue</DialogTitle>
+                            <DialogTitle className="text-gray-900 dark:text-white">Request Book Issue</DialogTitle>
                           </DialogHeader>
                           <div className="space-y-4">
                             <div>
-                              <h4 className="font-medium text-black">{book.title}</h4>
-                              <p className="text-sm text-gray-600">by {book.author}</p>
+                              <h4 className="font-medium text-gray-900 dark:text-white">{book.title}</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-300">by {book.author}</p>
                             </div>
                             
                             <div className="space-y-2">
-                              <Label htmlFor="duration" className="text-black">Requested Duration (days)</Label>
+                              <Label htmlFor="duration" className="text-gray-900 dark:text-white">Requested Duration (days)</Label>
                               
-                              {/* Quick Select Options */}
+                              {/* Update quick select buttons */}
                               <div className="grid grid-cols-4 gap-2 mb-3">
                                 {[7, 14, 21, 30].map(days => (
                                   <Button
@@ -479,8 +475,8 @@ const BooksPage = () => {
                                     size="sm"
                                     onClick={() => setRequestedDuration(days)}
                                     className={requestedDuration === days ? 
-                                      "bg-black text-white" : 
-                                      "bg-white text-black border-gray-300 hover:bg-gray-100"
+                                      "bg-blue-600 text-white hover:bg-blue-700" : 
+                                      "bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
                                     }
                                   >
                                     {days}d
@@ -490,7 +486,7 @@ const BooksPage = () => {
                               
                               {/* Custom Input */}
                               <div className="space-y-1">
-                                <Label className="text-sm text-gray-600">Or enter custom days (1-30):</Label>
+                                <Label className="text-gray-900 dark:text-white">Or enter custom days (1-30):</Label>
                                 <Input
                                   type="number"
                                   min="1"
@@ -507,16 +503,16 @@ const BooksPage = () => {
                                     }
                                   }}
                                   placeholder="Enter days (1-30)"
-                                  className="bg-white text-black border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 focus:border-blue-500 focus:ring-blue-500"
                                 />
-                                <p className="text-xs text-gray-500">Maximum 30 days allowed</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">Maximum 30 days allowed</p>
                               </div>
                             </div>
                             
                             <div className="flex gap-2">
                               <Button
                                 onClick={() => handleRequestBook(book._id, requestedDuration)}
-                                className="flex-1 bg-black text-white hover:bg-gray-800"
+                                className="flex-1 bg-blue-600 text-white hover:bg-blue-700"
                                 disabled={!requestedDuration || requestedDuration < 1 || requestedDuration > 30}
                               >
                                 Submit Request ({requestedDuration} day{requestedDuration !== 1 ? 's' : ''})
@@ -528,7 +524,7 @@ const BooksPage = () => {
                                   setSelectedBookId(null);
                                   setRequestedDuration(14);
                                 }}
-                                className="bg-white text-black border-gray-300 hover:bg-gray-50"
+                                className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600"
                               >
                                 Cancel
                               </Button>
